@@ -25,9 +25,11 @@ This is so the files are only read and cached once. Then you can simply import `
 ```elixir
 defp html_helpers do
   quote do
+    # ...
 
     import MyAppWeb.SVG
 
+    # ...
   end
 end
 ```
