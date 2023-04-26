@@ -1,11 +1,11 @@
-defmodule PhoenixIcon.MixProject do
+defmodule PhoenixSVG.MixProject do
   use Mix.Project
 
-  @url "https://github.com/jsonmaur/phoenix-icon"
+  @url "https://github.com/jsonmaur/phoenix-svg"
 
   def project do
     [
-      app: :phoenix_icon,
+      app: :phoenix_svg,
       version: "1.0.1",
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
@@ -14,7 +14,7 @@ defmodule PhoenixIcon.MixProject do
       aliases: aliases(),
       source_url: @url,
       homepage_url: "#{@url}#readme",
-      description: "Use SVG icons in Phoenix",
+      description: "Use inline SVGs in Phoenix",
       authors: ["Jason Maurer"],
       package: [
         licenses: ["MIT"],

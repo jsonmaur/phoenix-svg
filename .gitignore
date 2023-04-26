@@ -23,7 +23,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-phoenix_icon-*.tar
+phoenix_svg-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
