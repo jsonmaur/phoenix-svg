@@ -9,7 +9,7 @@ defmodule PhoenixSVG do
     otp_app = Keyword.fetch!(opts, :otp_app)
     as = Keyword.get(opts, :as, :svg)
     base_path = Keyword.get(opts, :path, "priv/svgs")
-    attributes = Keyword.get(opts, :attributes, %{})
+    attributes = Keyword.get(opts, :attributes, [])
 
     svgs_path = Application.app_dir(otp_app, base_path)
     {svgs, hash} = PhoenixSVG.list_files(svgs_path)
@@ -24,7 +24,8 @@ defmodule PhoenixSVG do
 
           def unquote(as)(unquote(Macro.escape(pattern_match)) = assigns) do
             html_attrs =
-              unquote(Macro.escape(attributes))
+              unquote(attributes)
+              |> Enum.into(%{})
               |> Map.merge(assigns)
               |> Phoenix.Component.assigns_to_attributes([:name, :path])
               |> PhoenixSVG.to_safe_html_attrs()

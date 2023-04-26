@@ -1,6 +1,7 @@
 defmodule PhoenixSVGTest do
   use ExUnit.Case, async: true
   use PhoenixSVG, otp_app: :phoenix_svg
+  use PhoenixSVG, otp_app: :phoenix_svg, as: :icon, path: "priv/svgs/random", attributes: %{width: "24px"}
 
   import Phoenix.LiveViewTest
 
@@ -50,6 +51,19 @@ defmodule PhoenixSVGTest do
       assert_raise RuntimeError, "\"invalid\" is not a valid svg for path \"[\"invalidpath\"]\"", fn ->
         render_component(&svg/1, name: "invalid", path: ["invalidpath"])
       end
+    end
+  end
+
+  describe "icon/1" do
+    test "should render an icon" do
+      html = render_component(&icon/1, name: "abacus")
+
+      refute html =~ "name="
+      refute html =~ "path="
+
+      assert html =~ " width=\"24px\""
+      assert html =~ " viewBox=\"0 0 24 24\""
+      assert html =~ " d=\"M5"
     end
   end
 
