@@ -5,12 +5,12 @@ defmodule PhoenixIcon do
 
   import Phoenix.Component
 
-  @base_path Application.compile_env(:phoenix_icon, :base_path, "priv/icons")
-  @attributes Application.compile_env(:phoenix_icon, :attributes, %{})
-
   defmacro __using__(opts) do
+    base_path = Application.get_env(:phoenix_icon, :base_path, "priv/icons")
+    attributes = Application.get_env(:phoenix_icon, :attributes, %{})
+
     otp_app = Keyword.fetch!(opts, :otp_app)
-    icons_path = Application.app_dir(otp_app, @base_path)
+    icons_path = Application.app_dir(otp_app, base_path)
     {icons, hash} = PhoenixIcon.list_svgs(icons_path)
 
     [
@@ -23,7 +23,7 @@ defmodule PhoenixIcon do
 
           def icon(unquote(Macro.escape(pattern_match)) = assigns) do
             html_attrs =
-              unquote(Macro.escape(@attributes))
+              unquote(Macro.escape(attributes))
               |> Map.merge(assigns)
               |> Phoenix.Component.assigns_to_attributes([:name, :type])
               |> PhoenixIcon.to_safe_html_attrs()
