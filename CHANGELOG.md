@@ -1,3 +1,7 @@
+## v1.0.3
+
+- Change `path` option to `from`
+
 ## v1.0.2
 
 - Change `:attributes` option to a keyword list

@@ -56,7 +56,7 @@ Any attributes defined will be passed through to the `<svg>` tag:
 
 * `:otp_app` - The name of your OTP application. This is required.
 * `:as` - The name of the generated component function. Defaults to `:svg`.
-* `:path` - The path of your svg files relative to your project directory. If using releases, make sure this path is included in your release directory (`priv` is included by default). Defaults to `priv/svgs`.
+* `:from` - The path of your svg files relative to your project directory. If using releases, make sure this path is included in your release directory (`priv` is included by default). Defaults to `priv/svgs`.
 * `:attributes` - A map of default attributes to inject into the SVG tags. Defaults to `%{}`.
 
 #### Example
@@ -65,7 +65,7 @@ Any attributes defined will be passed through to the `<svg>` tag:
 use PhoenixSVG,
   otp_app: :myapp,
   as: :icon,
-  path: "priv/static/icons",
+  from: "priv/static/icons",
   attributes: %{width: "24px", height: "24px"}
 ```
 

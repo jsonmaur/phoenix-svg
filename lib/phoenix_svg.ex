@@ -8,10 +8,10 @@ defmodule PhoenixSVG do
   defmacro __using__(opts) do
     otp_app = Keyword.fetch!(opts, :otp_app)
     as = Keyword.get(opts, :as, :svg)
-    base_path = Keyword.get(opts, :path, "priv/svgs")
+    from = Keyword.get(opts, :from, "priv/svgs")
     attributes = Keyword.get(opts, :attributes, [])
 
-    svgs_path = Application.app_dir(otp_app, base_path)
+    svgs_path = Application.app_dir(otp_app, from)
     {svgs, hash} = PhoenixSVG.list_files(svgs_path)
 
     [
@@ -92,10 +92,10 @@ defmodule PhoenixSVG do
   The name will be the filename without the extension, and the path will be a list of directory
   names the file is nested in relative to the base path.
   """
-  def read_file!(filepath, base_path) do
+  def read_file!(filepath, basepath) do
     data = File.read!(filepath) |> String.trim()
     name = Path.basename(filepath) |> Path.rootname()
-    rel_path = Path.relative_to(filepath, base_path)
+    rel_path = Path.relative_to(filepath, basepath)
 
     path =
       rel_path
