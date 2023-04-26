@@ -6,7 +6,7 @@ defmodule PhoenixSVG.MixProject do
   def project do
     [
       app: :phoenix_svg,
-      version: "1.0.0",
+      version: "1.0.1",
       elixir: "~> 1.13",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
