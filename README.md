@@ -52,7 +52,7 @@ Any attributes defined will be passed through to the `<svg>` tag:
 <.svg name="checkmark" class="foobar" />
 ```
 
-## Configuration
+## Options
 
 * `:otp_app` - The name of your OTP application. This is required.
 * `:as` - The name of the generated component function. Defaults to `:svg`.
