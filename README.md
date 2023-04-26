@@ -34,29 +34,36 @@ defp html_helpers do
 end
 ```
 
-Now when you start your Phoenix server, all the SVG files located in `priv/svgs` will be loaded into memory and can be used with the svg component. Any attributes defined will be passed through to the `<svg>` tag. For example, if you have a file at `priv/svgs/account.svg`:
+Now when you start your Phoenix server, all the SVG files located in `priv/svgs` will be loaded into memory and can be used with the svg component. For example, if you have a file at `priv/svgs/checkmark.svg`:
 
 ```heex
-<.svg name="account" class="foobar" />
+<.svg name="checkmark" />
 ```
 
-An error will be raised if the file is not found. If your svgs are nested in a subdirectory, specify a list in the `path` attribute with one item representing each folder. e.g. for `priv/svgs/generic/account.svg`:
+An error will be raised if the file is not found. If your svgs are nested in a subdirectory, specify a list in the `path` attribute with one item representing each folder. e.g. for `priv/svgs/branding/circle/checkmark.svg`:
 
 ```heex
-<.svg name="account" path={["generic"]} class="foobar" />
+<.svg name="checkmark" path={["branding", "circle"]} />
+```
+
+Any attributes defined will be passed through to the `<svg>` tag:
+
+```heex
+<.svg name="checkmark" class="foobar" />
 ```
 
 ## Configuration
 
-You can customize the following config items:
-
-* `:path` The path of your svg files relative to your project directory. If using releases, make sure this path is included in your release directory (`priv` is included by default). Defaults to `priv/svgs`.
+* `:otp_app` - The name of your OTP application. This is required.
+* `:as` - The name of the generated component function. Defaults to `:svg`.
+* `:path` - The path of your svg files relative to your project directory. If using releases, make sure this path is included in your release directory (`priv` is included by default). Defaults to `priv/svgs`.
 * `:attributes` - A map of default attributes to inject into the SVG tags. Defaults to `%{}`.
 
-To customize any of these values, add them to `config/config.exs`:
+#### Example
 
 ```elixir
-config :phoenix_svg,
+use PhoenixSVG,
+  otp_app: :myapp,
   path: "priv/static/icons",
   attributes: %{width: "24px", height: "24px"}
 ```

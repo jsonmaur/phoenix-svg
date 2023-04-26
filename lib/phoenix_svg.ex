@@ -6,12 +6,12 @@ defmodule PhoenixSVG do
   import Phoenix.Component
 
   defmacro __using__(opts) do
-    base_path = Application.get_env(:phoenix_svg, :path, "priv/svgs")
-    attributes = Application.get_env(:phoenix_svg, :attributes, %{})
-
     otp_app = Keyword.fetch!(opts, :otp_app)
-    svgs_path = Application.app_dir(otp_app, base_path)
+    as = Keyword.get(opts, :as, :svg)
+    base_path = Keyword.get(opts, :path, "priv/svgs")
+    attributes = Keyword.get(opts, :attributes, %{})
 
+    svgs_path = Application.app_dir(otp_app, base_path)
     {svgs, hash} = PhoenixSVG.list_files(svgs_path)
 
     [
@@ -22,7 +22,7 @@ defmodule PhoenixSVG do
         quote do
           @external_resource unquote(svg)
 
-          def svg(unquote(Macro.escape(pattern_match)) = assigns) do
+          def unquote(as)(unquote(Macro.escape(pattern_match)) = assigns) do
             html_attrs =
               unquote(Macro.escape(attributes))
               |> Map.merge(assigns)
@@ -38,7 +38,7 @@ defmodule PhoenixSVG do
         end
       end,
       quote do
-        def svg(assigns) do
+        def unquote(as)(assigns) do
           for_path = if assigns[:path], do: " for path \"#{inspect(assigns.path)}\"", else: ""
           raise "#{inspect(assigns.name)} is not a valid svg#{for_path}"
         end
