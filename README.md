@@ -12,7 +12,7 @@ def deps do
 end
 ```
 
-The recommended way to install into your Phoenix application is to create a component file at `lib/myapp_web/components/svg.ex` (replacing `myapp` with the name of your app):
+The recommended way to install into your Phoenix application is to create a file at `lib/myapp_web/svg.ex` (replacing `myapp` with the name of your app):
 
 ```elixir
 defmodule MyAppWeb.SVG do
