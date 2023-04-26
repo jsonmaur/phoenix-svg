@@ -64,8 +64,13 @@ Any attributes defined will be passed through to the `<svg>` tag:
 ```elixir
 use PhoenixSVG,
   otp_app: :myapp,
+  as: :icon,
   path: "priv/static/icons",
   attributes: %{width: "24px", height: "24px"}
+```
+
+```heex
+<.icon name="checkmark" />
 ```
 
 ## Local Development
