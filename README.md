@@ -75,4 +75,4 @@ use PhoenixSVG,
 
 ## Local Development
 
-If you add, remove, or change svg files while the server is running, they will automatically be replaced in the cache and you don't have to restart for them to take effect. If you want to live reload the page when a file changes, add `~r"priv/svgs/.*(svg)$"` to the patterns list of the Endpoint config in `config/dev.exs`.
+If you add, remove, or change svg files while running `mix phx.server`, they will automatically be replaced in the cache and you don't have to restart for them to take effect. If you want to live reload the page when an svg file changes, add `~r"priv/svgs/.*(svg)$"` to the patterns list of the Endpoint config in `config/dev.exs`.

@@ -19,14 +19,7 @@ defmodule PhoenixSVG.MixProject do
       package: [
         licenses: ["MIT"],
         links: %{"GitHub" => @url},
-        files: [
-          "lib",
-          ".formatter.exs",
-          "CHANGELOG.md",
-          "LICENSE",
-          "mix.exs",
-          "README.md"
-        ]
+        files: ~w(lib .formatter.exs CHANGELOG.md LICENSE mix.exs README.md)
       ],
       docs: [
         main: "readme",

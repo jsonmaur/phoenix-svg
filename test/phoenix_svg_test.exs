@@ -1,7 +1,6 @@
 defmodule PhoenixSVGTest do
   use ExUnit.Case, async: true
   use PhoenixSVG, otp_app: :phoenix_svg
-  use PhoenixSVG, otp_app: :phoenix_svg, as: :icon, from: "priv/svgs/random", attributes: %{width: "24px"}
 
   import Phoenix.LiveViewTest
 
@@ -55,6 +54,8 @@ defmodule PhoenixSVGTest do
   end
 
   describe "icon/1" do
+    use PhoenixSVG, otp_app: :phoenix_svg, as: :icon, from: "priv/svgs/random", attributes: %{width: "24px"}
+
     test "should render an icon" do
       html = render_component(&icon/1, name: "abacus")
 

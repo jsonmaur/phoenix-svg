@@ -82,6 +82,7 @@ defmodule PhoenixSVG do
       path
       |> Path.join("**/*.svg")
       |> Path.wildcard()
+      |> Enum.sort()
 
     {files, :erlang.md5(files)}
   end
@@ -109,8 +110,8 @@ defmodule PhoenixSVG do
   @doc """
   Converts a map or keyword list into HTML-safe attributes.
 
-  Any keys that contain an underscore will be converted to a dash in the HTMl attribute. For
-  example, `%{foo_bar: "foo_bar"}` will result in the attribute `foo-bar="foo_bar"`.
+  Any keys that contain an underscore will be converted to a dash in the HTML attribute. For
+  example, `%{foo_bar: "baz"}` will result in the attribute `foo-bar="baz"`.
   """
   def to_safe_html_attrs(data) do
     for {key, value} <- data do
