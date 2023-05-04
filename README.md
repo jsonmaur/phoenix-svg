@@ -1,8 +1,8 @@
-<a href="https://github.com/jsonmaur/phoenix-svg/actions/workflows/test.yml"><img alt="Test Status" src="https://img.shields.io/github/actions/workflow/status/jsonmaur/phoenix-svg/test.yml?label=&style=for-the-badge&logo=github"></a> <a href="https://hexdocs.pm/phoenix_svg/"><img alt="Hex Version" src="https://img.shields.io/hexpm/v/phoenix_svg?style=for-the-badge&label=&logo=elixir" /></a>
+# Phoenix SVG
 
-Use inline SVGs in your [Phoenix](https://www.phoenixframework.org) application. This module will load the files during compilation so you don't have to worry about performance, handle refreshing the cache when the files change, inline the SVG tags into your templates, and includes support for defining custom attributes with defaults in the config.
+Use inline SVGs in Phoenix apps. This module will load the files during compilation so you don't have to worry about performance, handle refreshing the cache when the files change, inline the SVG tags into your templates, and includes support for defining custom attributes with defaults.
 
-## Getting Started
+## Installation
 
 ```elixir
 def deps do
@@ -34,6 +34,8 @@ defp html_helpers do
 end
 ```
 
+## Getting Started
+
 Now when you start your Phoenix server, all the SVG files located in `priv/svgs` will be loaded into memory and can be used with the svg component. For example, if you have a file at `priv/svgs/checkmark.svg`:
 
 ```heex
@@ -60,6 +62,7 @@ If you add, remove, or change svg files while running `mix phx.server`, they wil
 config :myapp, MyAppWeb.Endpoint,
   live_reload: [
     patterns: [
+      # ...
       ~r"priv/svgs/.*(svg)$",
       # ...
     ]
