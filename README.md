@@ -1,6 +1,6 @@
 <a href="https://github.com/jsonmaur/phoenix-svg/actions/workflows/test.yml"><img alt="Test Status" src="https://img.shields.io/github/actions/workflow/status/jsonmaur/phoenix-svg/test.yml?label=&style=for-the-badge&logo=github"></a> <a href="https://hexdocs.pm/phoenix_svg/"><img alt="Hex Version" src="https://img.shields.io/hexpm/v/phoenix_svg?style=for-the-badge&label=&logo=elixir" /></a>
 
-Use inline SVGs in your [Phoenix](https://www.phoenixframework.org) application for defining custom icon libraries. This module will load the files during compilation so you don't have to worry about performance, handle refreshing the cache when the files change, inline the SVG tags into your templates, and includes support for defining custom attributes with defaults in the config.
+Use inline SVGs in your [Phoenix](https://www.phoenixframework.org) application. This module will load the files during compilation so you don't have to worry about performance, handle refreshing the cache when the files change, inline the SVG tags into your templates, and includes support for defining custom attributes with defaults in the config.
 
 ## Getting Started
 
@@ -52,27 +52,16 @@ Any attributes defined will be passed through to the `<svg>` tag:
 <.svg name="checkmark" class="foobar" />
 ```
 
-## Options
-
-* `:otp_app` - The name of your OTP application. This is required.
-* `:as` - The name of the generated component function. Defaults to `:svg`.
-* `:from` - The path of your svg files relative to your project directory. If using releases, make sure this path is included in your release directory (`priv` is included by default). Defaults to `priv/svgs`.
-* `:attributes` - A map of default attributes to inject into the SVG tags. Defaults to `%{}`.
-
-#### Example
-
-```elixir
-use PhoenixSVG,
-  otp_app: :myapp,
-  as: :icon,
-  from: "priv/static/icons",
-  attributes: %{width: "24px", height: "24px"}
-```
-
-```heex
-<.icon name="checkmark" />
-```
-
 ## Local Development
 
-If you add, remove, or change svg files while running `mix phx.server`, they will automatically be replaced in the cache and you don't have to restart for them to take effect. If you want to live reload the page when an svg file changes, add `~r"priv/svgs/.*(svg)$"` to the patterns list of the Endpoint config in `config/dev.exs`.
+If you add, remove, or change svg files while running `mix phx.server`, they will automatically be replaced in the cache and you don't have to restart for them to take effect. To live reload when an svg file changes, add to the patterns list of the Endpoint config in `config/dev.exs`:
+
+```elixir
+config :myapp, MyAppWeb.Endpoint,
+  live_reload: [
+    patterns: [
+      ~r"priv/svgs/.*(svg)$",
+      # ...
+    ]
+  ]
+```

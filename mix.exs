@@ -14,8 +14,7 @@ defmodule PhoenixSVG.MixProject do
       aliases: aliases(),
       source_url: @url,
       homepage_url: "#{@url}#readme",
-      description: "Use inline SVGs in Phoenix",
-      authors: ["Jason Maurer"],
+      description: "Inline SVG component for Phoenix",
       package: [
         licenses: ["MIT"],
         links: %{"GitHub" => @url},
@@ -23,7 +22,8 @@ defmodule PhoenixSVG.MixProject do
       ],
       docs: [
         main: "readme",
-        extras: ["README.md"]
+        extras: ["README.md"],
+        authors: ["Jason Maurer"]
       ]
     ]
   end
@@ -37,7 +37,7 @@ defmodule PhoenixSVG.MixProject do
   defp deps do
     [
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
-      {:makeup_eex, "~> 0.1", only: :dev, runtime: false},
+      {:makeup_eex, "~> 0.1", only: :dev},
       {:phoenix_live_view, "~> 0.17"}
     ]
   end

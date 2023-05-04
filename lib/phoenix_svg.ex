@@ -1,127 +1,107 @@
 defmodule PhoenixSVG do
   @moduledoc """
-  Use inline SVGs in Phoenix
+  Inline SVG component for Phoenix. Check out the [README](readme.html) to get started.
+
+  ## Options
+
+    * `:otp_app` - The name of your OTP application. This is required.
+
+    * `:as` - The name of the generated component function. Defaults to `:svg`.
+
+    * `:from` - The path of your svg files relative to your project directory. If using releases,
+    make sure this path is included in your release directory (`priv` is included by default).
+    Defaults to `priv/svgs`.
+
+    * `:attributes` - A keyword list of default attributes to inject into the SVG tags. Defaults
+    to `[]`.
+
+  ## Example
+
+  ```elixir
+  use PhoenixSVG,
+    otp_app: :myapp,
+    as: :icon,
+    from: "priv/static/icons",
+    attributes: [width: "24px", height: "24px"]
+  ```
+
+  ```heex
+  <.icon name="checkmark" />
+  ```
+
   """
 
   import Phoenix.Component
+  import Phoenix.HTML
 
   defmacro __using__(opts) do
-    otp_app = Keyword.fetch!(opts, :otp_app)
-    as = Keyword.get(opts, :as, :svg)
-    from = Keyword.get(opts, :from, "priv/svgs")
-    attributes = Keyword.get(opts, :attributes, [])
+    quote bind_quoted: [opts: opts] do
+      otp_app = Keyword.fetch!(opts, :otp_app)
+      as = Keyword.get(opts, :as, :svg)
+      from = Keyword.get(opts, :from, "priv/svgs")
+      attributes = Keyword.get(opts, :attributes, [])
 
-    svgs_path = Application.app_dir(otp_app, from)
-    {svgs, hash} = PhoenixSVG.list_files(svgs_path)
+      svg_path = Application.app_dir(otp_app, from)
+      {svgs, hash} = PhoenixSVG.Helpers.list_files(svg_path)
 
-    [
+      @phoenix_svg_path svg_path
+      @phoenix_svg_hash hash
+
       for svg <- svgs do
-        {name, path, data} = PhoenixSVG.read_file!(svg, svgs_path)
-        pattern_match = if path == [], do: %{name: name}, else: %{name: name, path: path}
+        @external_resource svg
 
-        quote do
-          @external_resource unquote(svg)
+        case PhoenixSVG.Helpers.read_file!(svg, svg_path) do
+          {name, [], content} ->
+            def unquote(as)(%{name: unquote(name)} = assigns) do
+              PhoenixSVG.render(unquote(content), unquote(attributes), assigns)
+            end
 
-          def unquote(as)(unquote(Macro.escape(pattern_match)) = assigns) do
-            html_attrs =
-              unquote(attributes)
-              |> Enum.into(%{})
-              |> Map.merge(assigns)
-              |> Phoenix.Component.assigns_to_attributes([:name, :path])
-              |> PhoenixSVG.to_safe_html_attrs()
-
-            "<svg" <> tail = unquote(data)
-
-            PhoenixSVG.svg(%{
-              inner_content: Phoenix.HTML.raw(["<svg ", html_attrs, String.trim(tail)])
-            })
-          end
-        end
-      end,
-      quote do
-        def unquote(as)(assigns) do
-          for_path = if assigns[:path], do: " for path \"#{inspect(assigns.path)}\"", else: ""
-          raise "#{inspect(assigns.name)} is not a valid svg#{for_path}"
-        end
-
-        def __mix_recompile__? do
-          unquote(hash) != PhoenixSVG.list_files(unquote(svgs_path)) |> elem(1)
+          {name, path, content} ->
+            def unquote(as)(%{name: unquote(name), path: unquote(path)} = assigns) do
+              PhoenixSVG.render(unquote(content), unquote(attributes), assigns)
+            end
         end
       end
-    ]
+
+      def unquote(as)(assigns) do
+        for_path = if assigns[:path], do: " for path \"#{inspect(assigns.path)}\"", else: ""
+        raise "#{inspect(assigns.name)} is not a valid svg#{for_path}"
+      end
+
+      def __mix_recompile__? do
+        PhoenixSVG.Helpers.list_files(@phoenix_svg_path) |> elem(1) != @phoenix_svg_hash
+      end
+    end
   end
 
-  @doc """
-  Renders an inline svg from a cached file.
+  @doc false
+  def render("<svg" <> tail, attributes, assigns) do
+    html_attrs =
+      attributes
+      |> Enum.into(%{})
+      |> Map.merge(assigns)
+      |> assigns_to_attributes([:name, :path])
+      |> PhoenixSVG.Helpers.to_safe_html_attrs()
 
-  ## Attributes
+    assigns = %{
+      inner_content: raw(["<svg ", html_attrs, String.trim(tail)])
+    }
 
-    * `:name` - The name of the svg file, excluding the `.svg` extension.
-    * `:path` - A list of nested paths if the file is not in the root.
-
-  Any other attributes will be passed through to the `<svg>` tag.
-
-  Note that this function should never be called directly with `PhoenixSVG.svg`. It's meant to
-  be called from the `svg` function generated in the `__using__` macro. See the [Getting Started](readme.html#getting-started)
-  guide.
-  """
-  def svg(assigns) do
     ~H"""
-    <%= Phoenix.HTML.raw(@inner_content) %>
+    <%= raw(@inner_content) %>
     """
   end
 
   @doc """
-  List all of the SVG files in the given directory.
+  Renders an inline SVG using a cached file.
 
-  Returns a list of all the files, and an MD5 hash of the list so it can be determined if the list
-  changed and needs to be re-compiled.
+  ## Attributes
+
+    * `:name` - The name of the svg file, excluding the `.svg` extension.
+
+    * `:path` - A list of nested paths if the file is not in the root.
+
+  Any other attributes will be passed through to the SVG tag.
   """
-  def list_files(path) do
-    files =
-      path
-      |> Path.join("**/*.svg")
-      |> Path.wildcard()
-      |> Enum.sort()
-
-    {files, :erlang.md5(files)}
-  end
-
-  @doc """
-  Reads a file and parses out the name and path.
-
-  The name will be the filename without the extension, and the path will be a list of directory
-  names the file is nested in relative to the base path.
-  """
-  def read_file!(filepath, basepath) do
-    data = File.read!(filepath) |> String.trim()
-    name = Path.basename(filepath) |> Path.rootname()
-    rel_path = Path.relative_to(filepath, basepath)
-
-    path =
-      rel_path
-      |> Path.dirname()
-      |> Path.split()
-      |> Enum.reject(&(&1 == "."))
-
-    {name, path, data}
-  end
-
-  @doc """
-  Converts a map or keyword list into HTML-safe attributes.
-
-  Any keys that contain an underscore will be converted to a dash in the HTML attribute. For
-  example, `%{foo_bar: "baz"}` will result in the attribute `foo-bar="baz"`.
-  """
-  def to_safe_html_attrs(data) do
-    for {key, value} <- data do
-      key =
-        key
-        |> Atom.to_string()
-        |> String.replace("_", "-")
-        |> Phoenix.HTML.Safe.to_iodata()
-
-      [key, ?=, ?", Phoenix.HTML.Safe.to_iodata(value), ?", ?\s]
-    end
-  end
+  @callback svg(assigns :: map) :: Phoenix.LiveView.Rendered.t()
 end
