@@ -1,3 +1,9 @@
+## v1.0.4
+
+- Fixed issue with file sorting
+- Fixed issue with mixed types in attributes option
+- Cleaned up the using macro
+
 ## v1.0.3
 
 - Change `path` option to `from`
