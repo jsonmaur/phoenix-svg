@@ -92,6 +92,11 @@ defmodule PhoenixSVG do
     """
   end
 
+  def render("<?xml version="1.0" encoding="UTF-8"?>" <> tail, attributes, assigns) do
+    render(String.trim(tail), attributes, assigns)
+  end
+
+
   @doc """
   Renders an inline SVG using a cached file.
 
