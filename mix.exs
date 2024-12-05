@@ -38,7 +38,7 @@ defmodule PhoenixSVG.MixProject do
     [
       {:ex_doc, "~> 0.27", only: :dev, runtime: false},
       {:makeup_eex, "~> 0.1", only: :dev},
-      {:phoenix_live_view, "~> 0.17"}
+      {:phoenix_live_view, "~> 0.17 or ~> 1.0"}
     ]
   end
 
