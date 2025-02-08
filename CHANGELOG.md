@@ -1,3 +1,7 @@
+## v1.1.0
+
+- Upgrades dependencies, including Phoenix LiveView 1.0
+
 ## v1.0.4
 
 - Fixed issue with file sorting
